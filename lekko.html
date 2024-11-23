@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>심리 상담 챗봇 레코</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #e8f5fe, #c1e1f8);
+            background-size: cover;
+            overflow: hidden;
+            flex-direction: column;
+        }
+
+        .navbar {
+            width: 100%;
+            background-color: #1d3557;
+            padding: 15px;
+            text-align: center;
+            color: white;
+            font-size: 28px;
+            font-weight: 500;
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-container {
+            margin-top: 80px; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 900px;
+            padding: 20px;
+        }
+
+        .content-wrapper {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .intro-text {
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 18px;
+            color: #333;
+            max-width: 60%;
+            line-height: 1.5;
+        }
+
+        .leko-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin-right: 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-container {
+            width: 100%;
+            height: 600px;
+            background: #f4f6f9;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background-color: #1d3557;
+            padding: 20px;
+            color: white;
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .chat-box {
+            flex-grow: 1;
+            padding: 20px;
+            background-color: white;
+            border-radius: 0 0 12px 12px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .message-container {
+            display: flex;
+            align-items: flex-start;
+            margin: 10px 0;
+        }
+
+        .message-container.user { justify-content: flex-end; }
+        .message-container.bot { justify-content: flex-start; }
+
+        .user-message {
+            text-align: right;
+            font-size: 14px;
+            color: white;
+            background-color: #1d3557;
+            padding: 10px;
+            border-radius: 10px;
+            display: inline-block;
+            max-width: 70%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .bot-message {
+            text-align: left;
+            font-size: 14px;
+            color: #333;
+            background-color: #e1e8f0;
+            padding: 10px;
+            border-radius: 10px;
+            display: inline-block;
+            max-width: 70%;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .bot-message::after {
+            content: "";
+            position: absolute;
+            top: 10px;
+            left: -10px;
+            width: 0;
+            height: 0;
+            border-right: 10px solid #e1e8f0;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+        }
+
+        .input-container {
+            display: flex;
+            padding: 10px;
+            background-color: #1d3557;
+            border-radius: 0 0 12px 12px;
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            outline: none;
+            font-size: 16px;
+            background-color: #f4f6f9;
+        }
+
+        button {
+            width: 20%;
+            padding: 12px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.2s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+        }
+
+        .signup-container {
+            text-align: center;
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin-top: 100px;
+        }
+
+        .signup-container input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        .signup-container button {
+            width: 100%;
+            padding: 12px;
+            background-color: #1d3557;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .signup-container button:hover {
+            background-color: #4caf50;
+        }
+
+    </style>
+</head>
+    <body>
+
+        <div class="signup-container" id="signup-container">
+            <h2>회원가입</h2>
+            <form id="signup-form">
+                <input type="text" id="name" placeholder="이름을 입력하세요" required />
+                <input type="text" id="username" placeholder="아이디를 입력하세요" required />
+                <input type="password" id="password" placeholder="비밀번호를 입력하세요" required />
+                <button type="button" onclick="registerUser()">회원가입</button>
+            </form>
+        </div>
+
+        <div id="chatbot-container" style="display: none;">
+            <div class="navbar">레코 - 심리 상담 챗봇</div>
+            <div class="page-container">
+                <div class="intro-text">
+                    <h2 id="welcome-message"></h2>
+                    <p>심리 상담 챗봇 레코는 언제나 당신의 이야기를 들어주기 위해 여기 있습니다.</p>
+                </div>
+                <div class="content-wrapper">
+                    <img src="leko.jpg" alt="레코 이미지" class="leko-image">
+                    <div class="chat-container">
+                        <div class="chat-header">레코와 대화하기</div>
+                        <div class="chat-box" id="chat-box"></div>
+                        <div class="input-container">
+                            <input type="text" id="user-input" placeholder="메시지를 입력하세요..." />
+                            <button onclick="sendMessage()">전송</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // 회원가입 정보 저장
+            function registerUser() {
+                const name = document.getElementById("name").value.trim();
+                const username = document.getElementById("username").value.trim();
+                const password = document.getElementById("password").value.trim();
+
+                if (!name || !username || !password) {
+                    alert("모든 필드를 입력해 주세요.");
+                    return;
+                }
+
+                // 이름 저장 (로컬 스토리지 사용)
+                localStorage.setItem("userName", name);
+
+                // 환영 메시지 업데이트
+                document.getElementById("welcome-message").textContent = `${name}님, 반갑습니다!`;
+
+                // 회원가입 창 숨기기 및 챗봇 창 표시
+                document.getElementById("signup-container").style.display = "none";
+                document.getElementById("chatbot-container").style.display = "block";
+            }
+
+            // 레코의 응답에 타이핑 효과 추가
+            function typeBotResponse(message, callback) {
+                const chatBox = document.getElementById("chat-box");
+                const botMessageContainer = document.createElement("div");
+                botMessageContainer.classList.add("message-container", "bot");
+                const botMessageText = document.createElement("div");
+                botMessageText.classList.add("bot-message");
+                botMessageContainer.appendChild(botMessageText);
+                chatBox.appendChild(botMessageContainer);
+                chatBox.scrollTop = chatBox.scrollHeight;
+
+                let index = 0;
+                function typeNextChar() {
+                    if (index < message.length) {
+                        botMessageText.textContent += message.charAt(index);
+                        index++;
+                        setTimeout(typeNextChar, 50); // 50ms 딜레이 후 타이핑
+                    } else {
+                        callback(); // 타이핑이 끝나면 콜백 호출
+                    }
+                }
+                typeNextChar();
+            }
+
+            // 레코의 응답 생성
+            function generateResponse(message) {
+                const name = localStorage.getItem("userName") || "사용자"; // 저장된 이름 가져오기
+                const responses = {
+                    greeting: [`안녕하세요, ${name}님! 오늘 기분은 어떠신가요?`, `안녕하세요, ${name}님! 어떤 이야기를 나눌까요?`],
+                    sadness: [`힘든 감정을 느끼고 계시군요, ${name}님. 더 이야기해 주실 수 있나요?`, `슬픔이 느껴지는군요. 어떻게 도와드릴까요, ${name}님?`],
+                    happiness: [`기쁘게 느끼신다니 정말 좋네요, ${name}님! 더 들려주시겠어요?`, `행복한 소식이군요, ${name}님! 함께 나누고 싶어요!`],
+                    stress: [`스트레스는 누구에게나 있을 수 있는 감정이에요. 함께 이야기해 보아요, ${name}님.`],
+                    anxiety: [`불안감을 느끼시나요? ${name}님, 그런 감정을 나누어 주세요.`, `${name}님, 불안한 기분이 드시나요? 좀 더 얘기해볼까요?`],
+                    default: [`${name}님, 더 이야기를 듣고 싶습니다. 어떤 일이 있었나요?`, `${name}님, 무슨 일이든 이야기해 보세요. 저는 들어줄 준비가 되어 있어요.`]
+                };
+
+                if (message.includes("안녕") || message.includes("안녕하세요") || message.includes("반가워")) {
+                    return getRandomResponse(responses.greeting);
+                }
+                if (message.includes("슬퍼") || message.includes("눈물") || message.includes("힘들어") || message.includes("고통스러워") || message.includes("아파")) {
+                    return getRandomResponse(responses.sadness);
+                }
+                if (message.includes("행복해") || message.includes("기뻐") || message.includes("좋아")) {
+                    return getRandomResponse(responses.happiness);
+                }
+                if (message.includes("스트레스") || message.includes("불안") || message.includes("긴장")) {
+                    return getRandomResponse(responses.stress);
+                }
+                if (message.includes("불안") || message.includes("걱정")) {
+                    return getRandomResponse(responses.anxiety);
+                }
+                return getRandomResponse(responses.default);
+            }
+
+            // 랜덤 응답 함수
+            function getRandomResponse(arr) {
+                return arr[Math.floor(Math.random() * arr.length)];
+            }
+
+            // 엔터키 입력 이벤트
+            document.getElementById("user-input").addEventListener("keydown", function(event) {
+                if (event.key === "Enter") {
+                    sendMessage();
+                    event.preventDefault();
+                }
+            });
+
+            // 메시지 전송 함수
+            function sendMessage() {
+                const userMessage = document.getElementById("user-input").value.trim();
+                if (!userMessage) return;
+
+                // 사용자 메시지 추가
+                const chatBox = document.getElementById("chat-box");
+                const userMessageContainer = document.createElement("div");
+                userMessageContainer.classList.add("message-container", "user");
+                const userMessageText = document.createElement("div");
+                userMessageText.classList.add("user-message");
+                userMessageText.textContent = userMessage;
+                userMessageContainer.appendChild(userMessageText);
+                chatBox.appendChild(userMessageContainer);
+
+                // 봇 응답
+                const botResponse = generateResponse(userMessage);
+
+                // 타이핑 효과로 봇 메시지 표시
+                typeBotResponse(botResponse, function() {
+                    // 응답 끝난 후 추가 작업
+                });
+
+                // 스크롤 맨 아래로
+                chatBox.scrollTop = chatBox.scrollHeight;
+
+                // 입력창 초기화
+                document.getElementById("user-input").value = "";
+            }
+        </script>
+    </body>
+    </html>
